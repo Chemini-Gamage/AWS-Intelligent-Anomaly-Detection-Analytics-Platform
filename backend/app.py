@@ -1,50 +1,50 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
+from sqlalchemy.orm import Session
 
-from datetime import datetime
+from database import Base, engine, get_db
+import models
+import crud
+from ml_service import predict
 
 import random
+from datetime import datetime
+from routers import events
+from routers import statistics
+from routers import alerts
 
-import joblib
+# Create database tables
+Base.metadata.create_all(bind=engine)
 
-import pandas as pd
-
-
-
-app=FastAPI(
-    title="AWS Anomaly Detection API"
+app = FastAPI(
+    title="AWS Real-Time Analytics Platform",
+    version="1.0.0",
+    description="Real-Time Sensor Analytics with ML Anomaly Detection"
 )
-
-
-
-model=joblib.load(
-    "anomaly_model.pkl"
-)
-
-
-
-events=[]
-
 
 
 @app.get("/")
 def home():
-
     return {
-        "status":"running"
+        "status": "running",
+        "message": "AWS Analytics Backend Online"
     }
 
 
-
 @app.post("/events")
-def create_event():
+def generate_event(db: Session = Depends(get_db)):
+    """
+    Generate a simulated sensor event,
+    classify it with the ML model,
+    and store it in SQLite.
+    """
 
-
-
+    # 90% normal events
     if random.random() < 0.90:
 
         temperature = random.gauss(35, 4)
         pressure = random.gauss(1010, 8)
 
+    # 10% anomalies
     else:
 
         temperature = random.choice([
@@ -57,109 +57,35 @@ def create_event():
             random.uniform(1150, 1300)
         ])
 
-
-    data=pd.DataFrame(
-        [
-            {
-                "temperature":temperature,
-                "pressure":pressure
-            }
-        ]
-    )
-
-
-    prediction=model.predict(
-        data
-    )[0]
-
-
-
-    if prediction==-1:
-
-        status="ANOMALY"
-
-    else:
-
-        status="NORMAL"
-
-
-
-    event={
-
-        "id":
-        len(events)+1,
-
-
-        "timestamp":
-        datetime.utcnow(),
-
-
-        "temperature":
+    status = predict(
         temperature,
-
-
-        "pressure":
-        pressure,
-
-
-        "status":
-        status
-
-    }
-
-
-    events.append(event)
-
-
-    return event
-
-
-
-
-
-@app.get("/events")
-def get_events():
-
-    return events
-
-
-
-
-@app.get("/alerts")
-def alerts():
-
-    return [
-        e
-        for e in events
-        if e["status"]=="ANOMALY"
-    ]
-
-
-
-
-@app.get("/statistics")
-def statistics():
-
-
-    total=len(events)
-
-
-    anomalies=len(
-        [
-            e for e in events
-            if e["status"]=="ANOMALY"
-        ]
+        pressure
     )
 
+    event = models.Event(
+        timestamp=datetime.utcnow(),
+        temperature=temperature,
+        pressure=pressure,
+        status=status
+    )
+
+    return crud.create_event(db, event)
+
+
+
+@app.get("/")
+def home():
 
     return {
 
-        "total_events":total,
-
-        "normal_events":
-        total-anomalies,
-
-        "anomalies":
-        anomalies
+        "message": "Backend Running"
 
     }
+
+
+app.include_router(events.router)
+
+app.include_router(statistics.router)
+
+app.include_router(alerts.router)
+
