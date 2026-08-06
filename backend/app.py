@@ -40,17 +40,22 @@ def create_event():
 
 
 
-    temperature=random.uniform(
-        20,
-        120
-    )
+    if random.random() < 0.90:
 
+        temperature = random.gauss(35, 4)
+        pressure = random.gauss(1010, 8)
 
-    pressure=random.uniform(
-        850,
-        1100
-    )
+    else:
 
+        temperature = random.choice([
+            random.uniform(70, 120),
+            random.uniform(-20, 10)
+        ])
+
+        pressure = random.choice([
+            random.uniform(750, 850),
+            random.uniform(1150, 1300)
+        ])
 
 
     data=pd.DataFrame(
