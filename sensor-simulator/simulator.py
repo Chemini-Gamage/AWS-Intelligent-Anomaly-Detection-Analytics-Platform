@@ -1,11 +1,30 @@
-import requests
+import boto3
+import json
 import random
 import time
 import uuid
+import os
+
 from datetime import datetime
+from dotenv import load_dotenv
 
 
-API_URL = "http://127.0.0.1:8000/events"
+load_dotenv()
+
+
+QUEUE_URL = os.getenv("SQS_QUEUE_URL")
+
+AWS_REGION = os.getenv("AWS_REGION")
+
+
+if not QUEUE_URL:
+    raise Exception("Missing SQS_QUEUE_URL")
+
+
+sqs = boto3.client(
+    "sqs",
+    region_name=AWS_REGION
+)
 
 
 DEVICE_ID = str(uuid.uuid4())
@@ -14,46 +33,22 @@ DEVICE_ID = str(uuid.uuid4())
 
 def generate_sensor_data():
 
-    """
-    Simulates an IoT temperature sensor
-    """
-
     if random.random() < 0.95:
 
-        temperature = random.gauss(
-            35,
-            3
-        )
+        temperature = random.gauss(35,3)
 
-        pressure = random.gauss(
-            1010,
-            5
-        )
+        pressure = random.gauss(1010,5)
 
-        vibration = random.gauss(
-            2,
-            0.5
-        )
+        vibration = random.gauss(2,0.5)
 
 
     else:
 
-        # Simulated equipment failure
+        temperature = random.uniform(80,130)
 
-        temperature = random.uniform(
-            80,
-            130
-        )
+        pressure = random.uniform(700,850)
 
-        pressure = random.uniform(
-            700,
-            850
-        )
-
-        vibration = random.uniform(
-            8,
-            15
-        )
+        vibration = random.uniform(8,15)
 
 
     return {
@@ -63,52 +58,35 @@ def generate_sensor_data():
         "timestamp":
         datetime.utcnow().isoformat(),
 
-        "temperature":
-        temperature,
+        "temperature": round(temperature,2),
 
-        "pressure":
-        pressure,
+        "pressure": round(pressure,2),
 
-        "vibration":
-        vibration
+        "vibration": round(vibration,2)
 
     }
-
 
 
 
 while True:
 
 
-    sensor_data = generate_sensor_data()
+    event = generate_sensor_data()
 
 
-    try:
+    response = sqs.send_message(
 
-        response = requests.post(
-            API_URL,
-            json=sensor_data
-        )
+        QueueUrl=QUEUE_URL,
 
+        MessageBody=json.dumps(event)
 
-        print(
-            "Sent:",
-            sensor_data
-        )
+    )
 
 
-        print(
-            "Response:",
-            response.json()
-        )
-
-
-    except Exception as e:
-
-        print(
-            "Error:",
-            e
-        )
+    print(
+        "Sent to SQS:",
+        event
+    )
 
 
     time.sleep(5)
