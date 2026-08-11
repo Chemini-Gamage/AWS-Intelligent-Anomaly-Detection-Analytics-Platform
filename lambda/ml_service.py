@@ -1,10 +1,10 @@
+from pathlib import Path
 import joblib
 import pandas as pd
 
+MODEL_PATH = Path(__file__).parent / "anomaly_model.pkl"
 
-model = joblib.load(
-    "anomaly_model.pkl"
-)
+model = joblib.load(MODEL_PATH)
 
 
 def predict(
