@@ -1,31 +1,41 @@
-from pathlib import Path
 import joblib
 import pandas as pd
+from pathlib import Path
 
-MODEL_PATH = Path(__file__).parent / "anomaly_model.pkl"
+MODEL_PATH = Path(__file__).resolve().parent / "anomaly_model.pkl"
 
 model = joblib.load(MODEL_PATH)
 
 
-def predict(
+def predict_anomaly(
     temperature,
-    pressure
+    pressure,
+    vibration
 ):
+    """
+    Run anomaly detection using the trained ML model.
+    """
 
     data = pd.DataFrame(
-        [
-            {
-                "temperature": temperature,
-                "pressure": pressure
-            }
+        [[
+            temperature,
+            pressure,
+            vibration
+        ]],
+        columns=[
+            "temperature",
+            "pressure",
+            "vibration"
         ]
     )
 
+    prediction = model.predict(data)[0]
 
-    result = model.predict(data)[0]
+    # Isolation Forest:
+    #  1  = normal
+    # -1  = anomaly
 
-
-    if result == -1:
+    if prediction == -1:
         return "ANOMALY"
 
     return "NORMAL"
