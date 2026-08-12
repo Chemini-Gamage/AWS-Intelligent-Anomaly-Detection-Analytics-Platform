@@ -9,50 +9,31 @@ from sqlalchemy import Integer
 from sqlalchemy import Float
 from sqlalchemy import String
 from sqlalchemy import DateTime
-
+import random
 from database import Base
 
 from datetime import datetime
 
 device_id = Column(String)
 vibration = Column(Float)
-
 def generate_training_data():
+    data = []
 
-    data=[]
+    for _ in range(1000):
+        temperature = random.uniform(25, 40)
+        pressure = random.uniform(990, 1025)
+        vibration = random.uniform(0.5, 3.5)
 
-
-    for i in range(1000):
-
-        temperature=np.random.normal(
-            35,
-            5
-        )
-
-        pressure=np.random.normal(
-            1010,
-            10
-        )
-
-
-        data.append(
-            [
-                temperature,
-                pressure
-            ]
-        )
-
+        data.append([
+            temperature,
+            pressure,
+            vibration
+        ])
 
     return pd.DataFrame(
         data,
-        columns=[
-            "temperature",
-            "pressure"
-        ]
+        columns=["temperature", "pressure", "vibration"]
     )
-
-
-
 
 def train_model():
 
