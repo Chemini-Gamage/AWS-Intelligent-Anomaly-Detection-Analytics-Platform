@@ -7,11 +7,7 @@ MODEL_PATH = Path(__file__).resolve().parent / "anomaly_model.pkl"
 model = joblib.load(MODEL_PATH)
 
 
-def predict_anomaly(
-    temperature,
-    pressure,
-    vibration
-):
+def predict_anomaly(temperature, pressure, vibration):
     """
     Run anomaly detection using the trained ML model.
     """
