@@ -1,19 +1,29 @@
-#prediction logic
 import joblib
 import pandas as pd
+from pathlib import Path
 
-model = joblib.load("anomaly_model.pkl")
+MODEL_PATH = Path(__file__).resolve().parent / "anomaly_model.pkl"
+
+model = joblib.load(MODEL_PATH)
+
+FEATURES = [
+    "temperature",
+    "pressure",
+    "vibration"
+]
 
 
-def predict(temperature, pressure):
+def predict_anomaly(temperature, pressure, vibration):
 
-    sample = pd.DataFrame([
-        {
-            "temperature": temperature,
-            "pressure": pressure
-        }
-    ])
+    data = pd.DataFrame([{
+        "temperature": temperature,
+        "pressure": pressure,
+        "vibration": vibration
+    }])
 
-    prediction = model.predict(sample)[0]
+    prediction = model.predict(data)[0]
 
-    return "ANOMALY" if prediction == -1 else "NORMAL"
+    if prediction == -1:
+        return "ANOMALY"
+
+    return "NORMAL"
