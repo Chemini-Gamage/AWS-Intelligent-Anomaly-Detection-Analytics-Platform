@@ -81,9 +81,9 @@ def get_statistics():
     )
 
     anomaly_result = table.scan(
-        FilterExpression="#status = :anomaly",
+        FilterExpression="#pred = :anomaly",
         ExpressionAttributeNames={
-            "#status": "status"
+            "#pred": "prediction"
         },
         ExpressionAttributeValues={
             ":anomaly": "ANOMALY"
