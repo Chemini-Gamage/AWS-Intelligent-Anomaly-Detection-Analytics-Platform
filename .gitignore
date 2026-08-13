@@ -216,3 +216,16 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+
+# Local/generated backend data
+backend/events.db
+backend/*.pkl
+
+# AWS/local deployment artifacts
+.aws-sam/
