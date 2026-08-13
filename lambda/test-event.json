@@ -1,0 +1,7 @@
+﻿{
+  "device_id": "direct-test-001",
+  "timestamp": "2026-08-11T12:00:00Z",
+  "temperature": 25.5,
+  "pressure": 1012.3,
+  "vibration": 0.12
+}
