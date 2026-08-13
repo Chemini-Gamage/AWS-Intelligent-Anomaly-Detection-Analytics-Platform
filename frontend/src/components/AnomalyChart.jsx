@@ -4,7 +4,6 @@ import {
     Tooltip,
     Legend,
 } from "chart.js";
-
 import { Doughnut } from "react-chartjs-2";
 
 ChartJS.register(
@@ -14,15 +13,24 @@ ChartJS.register(
 );
 
 function AnomalyChart({ statistics }) {
-    const normal = statistics?.normal_events ?? 0;
-    const anomalies = statistics?.anomalies ?? 0;
+    const normal = Number(statistics?.normal_events ?? 0);
+    const anomalies = Number(statistics?.anomalies ?? 0);
 
     const data = {
-        labels: ["Normal", "Anomalies"],
+        labels: ["Normal Events", "Anomalies"],
         datasets: [
             {
                 data: [normal, anomalies],
-                borderWidth: 0,
+                backgroundColor: [
+                    "#22c55e",
+                    "#ef4444",
+                ],
+                borderColor: [
+                    "#16a34a",
+                    "#dc2626",
+                ],
+                borderWidth: 2,
+                hoverOffset: 8,
             },
         ],
     };
@@ -30,23 +38,23 @@ function AnomalyChart({ statistics }) {
     const options = {
         responsive: true,
         maintainAspectRatio: false,
-
+        cutout: "65%",
         plugins: {
             legend: {
                 position: "bottom",
+                labels: {
+                    padding: 20,
+                    usePointStyle: true,
+                },
             },
         },
-
-        cutout: "70%",
     };
 
     return (
         <div className="chart-card">
             <div className="chart-header">
-                <div>
-                    <h2>Event Distribution</h2>
-                    <p>Normal vs anomalous sensor events</p>
-                </div>
+                <h2>Event Distribution</h2>
+                <p>Normal vs anomaly events</p>
             </div>
 
             <div className="chart-container">

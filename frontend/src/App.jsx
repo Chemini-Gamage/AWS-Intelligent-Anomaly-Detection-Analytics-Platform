@@ -32,12 +32,16 @@ function App() {
 
       setStatistics(statsData);
 
-      setEvents(
-        Array.isArray(eventsData)
+      const receivedEvents = Array.isArray(eventsData)
           ? eventsData
-          : eventsData.events || []
-      );
+          : eventsData.events || [];
 
+      const sortedEvents = [...receivedEvents].sort(
+          (a, b) =>
+            new Date(b.timestamp) - new Date(a.timestamp)
+        );
+
+      setEvents(sortedEvents);
       try {
         await checkHealth();
         setApiStatus("Operational");

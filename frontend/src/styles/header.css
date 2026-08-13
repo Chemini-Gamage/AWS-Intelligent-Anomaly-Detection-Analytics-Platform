@@ -1,0 +1,49 @@
+.header {
+    background: #111827;
+    color: white;
+    padding: 28px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 26px;
+}
+
+.header p {
+    margin: 6px 0 0;
+    color: #aab4c5;
+}
+
+.status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.status-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.online {
+    background: #22c55e;
+}
+
+.offline {
+    background: #ef4444;
+}
+
+@media (max-width: 600px) {
+    .header {
+        padding: 24px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+}
