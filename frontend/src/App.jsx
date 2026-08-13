@@ -11,7 +11,7 @@ import StatCard from "./components/StatCard";
 import SensorCard from "./components/SensorCard";
 import EventTable from "./components/EventTable";
 import AnomalyChart from "./components/AnomalyChart";
-
+import AnomalyAnalysis from "./components/AnomalyAnalysis";
 import "./App.css";
 
 function App() {
@@ -33,13 +33,13 @@ function App() {
       setStatistics(statsData);
 
       const receivedEvents = Array.isArray(eventsData)
-          ? eventsData
-          : eventsData.events || [];
+        ? eventsData
+        : eventsData.events || [];
 
       const sortedEvents = [...receivedEvents].sort(
-          (a, b) =>
-            new Date(b.timestamp) - new Date(a.timestamp)
-        );
+        (a, b) =>
+          new Date(b.timestamp) - new Date(a.timestamp)
+      );
 
       setEvents(sortedEvents);
       try {
@@ -147,6 +147,7 @@ function App() {
               event={events[0]}
             />
           )}
+          <AnomalyAnalysis events={events} />
 
         </section>
 

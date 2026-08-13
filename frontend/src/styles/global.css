@@ -65,7 +65,79 @@ main {
 .empty-state {
     text-align: center;
     padding: 40px;
+
     color: #64748b;
+}
+
+.anomaly-analysis {
+    margin-bottom: 28px;
+}
+
+.anomaly-analysis-content {
+    padding: 24px;
+}
+
+.anomaly-device {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 24px;
+}
+
+.anomaly-device span,
+.anomaly-values span,
+.anomaly-details span {
+    color: #64748b;
+    font-size: 13px;
+}
+
+.anomaly-device strong {
+    font-size: 20px;
+}
+
+.anomaly-values {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 24px;
+}
+
+.anomaly-values div,
+.anomaly-details div {
+    background: #f8fafc;
+    padding: 16px;
+    border-radius: 8px;
+}
+
+.anomaly-values strong {
+    display: block;
+    margin-top: 7px;
+    font-size: 22px;
+}
+
+.anomaly-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.anomaly-details strong {
+    display: block;
+    margin-top: 7px;
+}
+
+.anomaly-text {
+    color: #dc2626;
+}
+
+@media (max-width: 900px) {
+    .anomaly-values {
+        grid-template-columns: 1fr;
+    }
+
+    .anomaly-details {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 900px) {
