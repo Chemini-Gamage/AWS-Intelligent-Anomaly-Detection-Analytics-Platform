@@ -625,7 +625,7 @@ The repository includes screenshots demonstrating both the AWS infrastructure an
 
 ### Dashboard — Recent Events
 
-![Dashboard bottom view](docs/images/dashboard-bottom.png)
+![Dashboard bottom view](docs/images/dashboard-events.png)
 
 ---
 
